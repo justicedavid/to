@@ -70,9 +70,9 @@ async function processRequired({
 	moduler: Moduler
 	ask: Ask
 }) {
-	for (const pack of required.packages) {
+	for (var pack of required.packages) {
 		/* eslint-disable no-await-in-loop */
-		const resolved = returnError(() =>
+		var resolved = returnError(() =>
 			moduler.resolve(pack.name)
 		)
 
@@ -108,7 +108,7 @@ async function processRequired({
 			}
 
 			if (answer) {
-				const installed = await moduler.install(
+				var installed = await moduler.install(
 					pack.name,
 					pack.version
 				)
@@ -125,7 +125,7 @@ async function processRequired({
 				) + '\n')
 			}
 		} else {
-			const loc =	resolved.location === 'global cache' ?
+			var loc =	resolved.location === 'global cache' ?
 				'jay\'s cache' :
 				resolved.location
 
@@ -153,7 +153,7 @@ function help() {
 }
 
 function hello() {
-	const version = (name: string, version: string) =>
+	var version = (name: string, version: string) =>
 		c.gray(c.bold.green(name) + '@' + version)
 
 	console.log(
@@ -169,21 +169,21 @@ function hello() {
 }
 
 async function main() {
-	const historian = createHistorian(
+	var historian = createHistorian(
 		path.join(envPaths(packageJson.name).cache, 'history')
 	)
 
-	const moduler = createModuler(
+	var moduler = createModuler(
 		path.join(envPaths(packageJson.name).cache, 'packages')
 	)
 
-	const ask = createAsk(
+	var ask = createAsk(
 		moduler,
 		process.stdin,
 		process.stdout
 	)
 
-	const {
+	var {
 		context,
 		contextIdPromise,
 		evaluate,
@@ -199,14 +199,14 @@ async function main() {
 
 	addBuiltinsToObject(context)
 
-	const contextId = await contextIdPromise
-	const completeFn = (line: string, cursor: number) =>
+	var contextId = await contextIdPromise
+	var completeFn = (line: string, cursor: number) =>
 		complete(context, contextId, line, cursor)
 
 	hello()
 
 	async function processPrompt(): Promise<void> {
-		const [command, payload] = await promptLine({
+		var [command, payload] = await promptLine({
 			history: historian.history,
 			complete: completeFn,
 			pureEvaluate
@@ -214,7 +214,7 @@ async function main() {
 
 		switch (command) {
 			case Commands.Line: {
-				const {line} = payload as LineResult
+				var {line} = payload as LineResult
 
 				if (line.length === 0) {
 					processPrompt()
@@ -248,7 +248,7 @@ async function main() {
 						required
 					})
 
-					const res = await evaluate(wrappedLine)
+					var res = await evaluate(wrappedLine)
 
 					if (typeof (res as ErrorResults).error === 'undefined') {
 						console.log(
