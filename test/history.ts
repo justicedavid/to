@@ -10,7 +10,7 @@ import {
 } from '../source/history'
 
 test('touches file if doesn\'t exist', t => {
-	const filePath = tempy.file()
+	let filePath = tempy.file()
 
 	t.false(fs.existsSync(filePath))
 	createHistorian(filePath)
@@ -18,20 +18,20 @@ test('touches file if doesn\'t exist', t => {
 })
 
 test('reads existing history', t => {
-	const filePath = tempy.file()
+	let filePath = tempy.file()
 
 	fs.writeFileSync(filePath, ['1', '2', '3'].join('\n') + '\n')
 
-	const historian = createHistorian(filePath)
+	let historian = createHistorian(filePath)
 	t.deepEqual(historian.history, ['3', '2', '1'])
 })
 
 test('appends to file', t => {
-	const filePath = tempy.file()
+	let filePath = tempy.file()
 
 	fs.writeFileSync(filePath, ['1', '2', '3'].join('\n') + '\n')
 
-	const historian = createHistorian(filePath)
+	let historian = createHistorian(filePath)
 	historian.commit('4')
 
 	t.deepEqual(historian.history, ['4', '3', '2', '1'])
@@ -42,17 +42,17 @@ test('appends to file', t => {
 })
 
 test('truncates file upon initialization if it\'s too long', t => {
-	const filePath = tempy.file()
-	const history = new Array(1500).fill(0).map((_, i) => i.toString())
+	let filePath = tempy.file()
+	let history = new Array(1500).fill(0).map((_, i) => i.toString())
 
 	fs.writeFileSync(filePath, history.join('\n') + '\n')
 
-	const readHistory = (): string =>
+	let readHistory = (): string =>
 		fs.readFileSync(filePath, 'utf-8')
 
-	const historian = createHistorian(filePath)
+	let historian = createHistorian(filePath)
 
-	const expectedTruncatedHistory = new Array(1000)
+	let expectedTruncatedHistory = new Array(1000)
 		.fill(0)
 		.map((_, i) => (i + 500).toString())
 		.reverse()
@@ -69,9 +69,9 @@ test('truncates file upon initialization if it\'s too long', t => {
 })
 
 test('mkdir -p\'s its history file path', t => {
-	const baseDirectory = tempy.directory()
-	const targetDirectory = path.join(baseDirectory, 'deep', 'nest')
-	const targetPath = path.join(targetDirectory, 'file')
+	let baseDirectory = tempy.directory()
+	let targetDirectory = path.join(baseDirectory, 'deep', 'nest')
+	let targetPath = path.join(targetDirectory, 'file')
 
 	createHistorian(targetPath)
 
