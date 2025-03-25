@@ -1,0 +1,119 @@
+{
+	"name": "jay-repl",
+	"version": "0.2.2",
+	"description": "Supercharged NodeJS REPL",
+	"license": "MIT",
+	"repository": "nikersify/jay",
+	"homepage": "https://github.com/nikersify/jay#readme",
+	"author": {
+		"name": "Maciej Łaszcz",
+		"email": "nikersify@nikerino.com",
+		"url": "nikerino.com"
+	},
+	"bin": {
+		"jay": "dist/cli.js"
+	},
+	"engines": {
+		"node": ">=10"
+	},
+	"scripts": {
+		"build": "del dist && tsc",
+		"build:watch": "tsc -w",
+		"prepublishOnly": "npm run build",
+		"test": "xo && ava -- --with-npm"
+	},
+	"files": [
+		"dist"
+	],
+	"types": "dist",
+	"dependencies": {
+		"acorn": "^6.1.1",
+		"acorn-walk": "^6.1.1",
+		"ansi-escapes": "^4.2.0",
+		"builtin-modules": "^3.1.0",
+		"chalk": "^2.4.2",
+		"emphasize": "^2.1.0",
+		"env-paths": "^2.2.0",
+		"execa": "^1.0.0",
+		"figures": "^3.0.0",
+		"fp-ts": "^1.19.0",
+		"import-fresh": "^3.0.0",
+		"io-ts": "^1.10.0",
+		"lodash": "^4.17.15",
+		"make-dir": "^3.0.0",
+		"open": "^6.3.0",
+		"ora": "^3.4.0",
+		"read-pkg-up": "^6.0.0",
+		"resolve": "^1.11.1",
+		"s-ago": "^2.0.1",
+		"semver": "^6.1.1",
+		"slice-ansi": "^2.1.0",
+		"strip-ansi": "^5.2.0",
+		"update-notifier": "^3.0.0",
+		"wrap-ansi": "^5.1.0",
+		"wrap-await": "^1.0.0"
+	},
+	"devDependencies": {
+		"@nikersify/noop": "^1.0.0",
+		"@types/execa": "^0.9.0",
+		"@types/lodash": "^4.14.134",
+		"@types/node": "^12.0.8",
+		"@types/resolve": "0.0.8",
+		"@types/semver": "^6.0.0",
+		"@types/slice-ansi": "^2.0.0",
+		"@types/update-notifier": "^2.5.0",
+		"@types/wrap-ansi": "^3.0.0",
+		"@typescript-eslint/eslint-plugin": "^1.10.2",
+		"@typescript-eslint/parser": "^1.10.2",
+		"ava": "^2.1.0",
+		"del-cli": "^2.0.0",
+		"eslint-config-xo-typescript": "^0.12.0",
+		"p-series": "^2.1.0",
+		"tempy": "^0.3.0",
+		"ts-node": "^8.3.0",
+		"typescript": "^3.5.2",
+		"xo": "^0.24.0"
+	},
+	"ava": {
+		"babel": false,
+		"compileEnhancements": false,
+		"extensions": [
+			"ts"
+		],
+		"require": [
+			"ts-node/register"
+		]
+	},
+	"xo": {
+		"semicolon": false,
+		"extends": "xo-typescript",
+		"extensions": [
+			"ts",
+			"tsx"
+		],
+		"rules": {
+			"@typescript-eslint/explicit-function-return-type": false,
+			"@typescript-eslint/member-delimiter-style": [
+				"error",
+				{
+					"multiline": {
+						"delimiter": "none"
+					},
+					"singleline": {
+						"delimiter": "semi",
+						"requireLast": false
+					}
+				}
+			],
+			"@typescript-eslint/semi": false,
+			"ava/no-ignored-test-files": false,
+			"quotes": [
+				"error",
+				"single",
+				{
+					"avoidEscape": true
+				}
+			]
+		}
+	}
+}
