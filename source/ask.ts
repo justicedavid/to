@@ -21,9 +21,9 @@ export function createAsk(
 		name: string,
 		version: string = 'latest'
 	): Promise<boolean> {
-		const write = outStream.write.bind(outStream)
+		var write = outStream.write.bind(outStream)
 
-		const spinner = ora({
+		var spinner = ora({
 			text: `fetching ${c.bold.green(`${name}@${version}`)} info...`,
 			stream: outStream
 		})
@@ -37,7 +37,7 @@ export function createAsk(
 			spinner.stop()
 		}
 
-		const desc = info.description ?
+		var desc = info.description ?
 			`\n- ${c.magenta(info.description)}\n` :
 			''
 
@@ -49,18 +49,18 @@ ${c.gray('published:')} ${ago(new Date(info.published))}
 ${c.gray('dependencies:')} ${c.cyan(Object.keys(info.dependencies).length.toString())}
 `.trim())
 
-		const yn = c.gray('(Y/n)')
-		const q =
+		var yn = c.gray('(Y/n)')
+		var q =
 		`${c.dim.bold('?')} ${c.green.bold(info.name)} was not found ` +
 		'locally, would you like to install it to jay\'s cache?'
 
 		write('\n\n' + wrapAnsi(`${q} ${yn}`, outStream.columns || Infinity) + ' ')
 		write(ansiEscapes.cursorHide)
 
-		const getK = async (): Promise<KeypressDetails> => {
-			const key = await getKeyPress(inStream)
+		var getK = async (): Promise<KeypressDetails> => {
+			var key = await getKeyPress(inStream)
 
-			const {name, ctrl} = key
+			var {name, ctrl} = key
 
 			if (
 				name === 'y' ||
@@ -74,9 +74,9 @@ ${c.gray('dependencies:')} ${c.cyan(Object.keys(info.dependencies).length.toStri
 			return getK()
 		}
 
-		const key = await getK()
+		var key = await getK()
 
-		const answer = key.name === 'y' || key.name === 'return'
+		var answer = key.name === 'y' || key.name === 'return'
 
 		if (!answer) {
 			write(c.red('n'))
