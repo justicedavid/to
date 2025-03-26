@@ -34,7 +34,7 @@ test('createScroller - less items than to show', t => {
 
 test('nextItem', t => {
 	// [start, end, selected]
-	var scenario = [
+	const scenario = [
 		[0, 3, -1],
 		[0, 3, 0],
 		[0, 3, 1],
@@ -52,7 +52,7 @@ test('nextItem', t => {
 	]
 
 	scenario.reduce((scrollInfo, expected) => {
-		var [start, end, selected] = expected
+		const [start, end, selected] = expected
 
 		t.deepEqual(scrollInfo, {
 			start,
@@ -67,7 +67,7 @@ test('nextItem', t => {
 
 test('previousItem', t => {
 	// [start, end, selected]
-	var scenario = [
+	const scenario = [
 		[6, 9, 9],
 		[6, 9, 8],
 		[6, 9, 7],
@@ -84,7 +84,7 @@ test('previousItem', t => {
 	]
 
 	scenario.reduce((scrollInfo, expected) => {
-		var [start, end, selected] = expected
+		const [start, end, selected] = expected
 
 		t.deepEqual(scrollInfo, {
 			start,
@@ -98,7 +98,7 @@ test('previousItem', t => {
 })
 
 test('firstItem', t => {
-	var f = flow([
+	const f = flow([
 		nextItem,
 		nextItem,
 		nextItem,
@@ -114,7 +114,7 @@ test('firstItem', t => {
 })
 
 test('firstItem - not many items', t => {
-	var f = flow([
+	const f = flow([
 		nextItem,
 		nextItem,
 		firstItem
@@ -154,7 +154,7 @@ test('lastItem - less items than to show', t => {
 })
 
 test('generateScrollbar - full scrollbar', t => {
-	var s: Omit<ScrollInfo, 'selected'> = {
+	const s: Omit<ScrollInfo, 'selected'> = {
 		start: 0,
 		end: 2,
 		_itemAmount: 3
