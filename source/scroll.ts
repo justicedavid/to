@@ -28,16 +28,16 @@ export function nextItem({
 	selected,
 	_itemAmount
 }: ScrollInfo): ScrollInfo {
-	const newSelected = selected + 1
+	let newSelected = selected + 1
 
 	if (newSelected === _itemAmount) {
 		return createScroller(_itemAmount, end - start + 1)
 	}
 
-	const shouldScroll =
+	let shouldScroll =
 		newSelected === end && end !== (_itemAmount - 1)
 
-	const s = (x: number): number =>
+	let s = (x: number): number =>
 		shouldScroll ? x + 1 : x
 
 	return {
@@ -54,16 +54,16 @@ export function previousItem({
 	selected,
 	_itemAmount
 }: ScrollInfo): ScrollInfo {
-	const newSelected = selected - 1
+	let newSelected = selected - 1
 
 	if (newSelected === -2) {
 		return lastItem(createScroller(_itemAmount, end - start + 1))
 	}
 
-	const shouldScroll =
+	let shouldScroll =
 		newSelected === start && start !== 0
 
-	const s = (x: number): number =>
+	let s = (x: number): number =>
 		shouldScroll ? x - 1 : x
 
 	return {
@@ -99,11 +99,11 @@ export function generateScrollbar({
 	end,
 	_itemAmount
 }: ScrollInfo): Scrollbar {
-	const trackHeight = (end - start) + 1
-	const scale = trackHeight / _itemAmount
+	let trackHeight = (end - start) + 1
+	let scale = trackHeight / _itemAmount
 
-	const scrollbarStart = Math.floor(start * scale)
-	const scrollbarHeight = Math.ceil(trackHeight * scale)
+	let scrollbarStart = Math.floor(start * scale)
+	let scrollbarHeight = Math.ceil(trackHeight * scale)
 
 	return {
 		size: scrollbarHeight,
