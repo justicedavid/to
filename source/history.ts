@@ -8,12 +8,12 @@ import makeDir from 'make-dir'
 // last line. This is so as to allow appending the file, rather
 // than replacing it as a whole.
 export function createHistorian(filePath: string) {
-	let directoryPath = path.dirname(filePath)
+	const directoryPath = path.dirname(filePath)
 	makeDir.sync(directoryPath)
 
 	fs.closeSync(fs.openSync(filePath, 'a')) // Touch the history file
 
-	let lines = fs.readFileSync(filePath, 'utf-8')
+	const lines = fs.readFileSync(filePath, 'utf-8')
 		.trim()
 		.split('\n')
 
@@ -21,11 +21,11 @@ export function createHistorian(filePath: string) {
 		fs.writeFileSync(filePath, lines.slice(-1000).join('\n') + '\n')
 	}
 
-	let history = lines.slice(-1000).reverse()
+	const history = lines.slice(-1000).reverse()
 
 	function commit(line: string): void {
 		history.unshift(line)
-		let fd = fs.openSync(filePath, 'a')
+		const fd = fs.openSync(filePath, 'a')
 		fs.writeSync(fd, `${line}\n`)
 		fs.closeSync(fd)
 	}
