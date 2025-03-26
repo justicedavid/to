@@ -1,3 +1,3 @@
-let i = 0
+const i = 0
 
 module.exports = () => ++i
