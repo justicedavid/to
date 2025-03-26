@@ -11,11 +11,11 @@ import {
 	createEvaluator
 } from '../source/eval'
 
-let out = (output: unknown): OutputResults => ({output})
-let err = (error: Error): EvaluationResults => ({error})
+const out = (output: unknown): OutputResults => ({output})
+const err = (error: Error): EvaluationResults => ({error})
 
 test('context globals', t => {
-	let {context} = createEvaluator()
+	const {context} = createEvaluator()
 
 	t.is(typeof context.Date, 'function')
 	t.is(typeof context.Symbol(), 'symbol')
@@ -27,7 +27,7 @@ type RunBasicCases =
 	(cases: Array<[string, EvaluationResults]>) =>
 	Promise<void>
 
-let runBasicCases: RunBasicCases = (t, ev = createEvaluator().evaluate) => cases =>
+const runBasicCases: RunBasicCases = (t, ev = createEvaluator().evaluate) => cases =>
 	pSeries(cases.map(([input, expected]) => async () =>
 		t.deepEqual(await ev(input), expected, input)
 	)).then(() => {}) // eslint-disable-line promise/prefer-await-to-then
@@ -35,7 +35,7 @@ let runBasicCases: RunBasicCases = (t, ev = createEvaluator().evaluate) => cases
 test('eval - basic', t => runBasicCases(t)([
 	['5', out(5)],
 	['"hello"', out('hello')],
-	['let x = 10', out(undefined)],
+	['const x = 10', out(undefined)],
 	['x', out(10)],
 	['{one: 1}', out({one: 1})],
 	['throw new Error()', err(new Error())]
@@ -46,7 +46,7 @@ test('eval - underscore', t => runBasicCases(t)([
 	['5', out(5)],
 	['_', out(5)],
 	['_', out(5)],
-	['let x = 0', out(undefined)],
+	['const x = 0', out(undefined)],
 	['_', out(undefined)]
 ]))
 
@@ -59,11 +59,11 @@ test('eval - globals', t => runBasicCases(t)([
 ]))
 
 test('eval - private global', async t => {
-	let ev = createEvaluator().evaluate
+	const ev = createEvaluator().evaluate
 	t.not((await ev('global') as OutputResults).output, global)
 })
 
-let ctx = {
+const ctx = {
 	a: 10,
 	b: 'hello',
 	c: Symbol('foo'),
@@ -77,7 +77,7 @@ type RunPureCases =
 	(cases: Array<[string, string | undefined]>) =>
 	Promise<void>
 
-let runPureCases: RunPureCases = (t, ev = createEvaluator().pureEvaluate) => cases =>
+const runPureCases: RunPureCases = (t, ev = createEvaluator().pureEvaluate) => cases =>
 	pSeries(cases.map(([input, expected]) => async () =>
 		t.deepEqual(await ev(input), expected, input)
 	)).then(() => {}) // eslint-disable-line promise/prefer-await-to-then
