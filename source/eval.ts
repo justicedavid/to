@@ -91,14 +91,14 @@ export function createEvaluator(ctx: LooseObject = {}): {
 	evaluate: Evaluator
 	pureEvaluate: PureEvaluator
 } {
-	const template: LooseObject = {}
+	var template: LooseObject = {}
 
 	Object.getOwnPropertyNames(global).forEach(name => {
 		if (name === 'global') {
 			return
 		}
 
-		const descriptor =
+		var descriptor =
 			Object.getOwnPropertyDescriptor(global, name)
 
 		if (typeof descriptor !== 'undefined') {
@@ -124,24 +124,24 @@ export function createEvaluator(ctx: LooseObject = {}): {
 
 	template.global = template
 
-	const {context, contextIdPromise} = createContext(template)
+	var {context, contextIdPromise} = createContext(template)
 
 	// Lines like `{a: 1}` will be treated as a block statement
 	// by the eval function rather than an expression statement -
 	// we have to surround it with brackets to get output desired
 	// in a REPL.
-	const wrapIfNeeded = (line: string) =>
+	var wrapIfNeeded = (line: string) =>
 		line.startsWith('{') && line.endsWith('}') ?
 			`(${line})` :
 			line
 
-	const evaluate = async (line: string) => {
+	var evaluate = async (line: string) => {
 		line = wrapIfNeeded(line)
 
-		const script = new Script(line)
+		var script = new Script(line)
 
 		try {
-			const output = await script.runInContext(context)
+			var output = await script.runInContext(context)
 			context._ = output
 
 			return {output}
@@ -150,7 +150,7 @@ export function createEvaluator(ctx: LooseObject = {}): {
 		}
 	}
 
-	const pureEvaluate = async (line: string) => {
+	var pureEvaluate = async (line: string) => {
 		if (semver.lt(process.version, '12.3.0')) {
 			// Not supported before because of
 			// https://github.com/nodejs/node/issues/27518
@@ -179,7 +179,7 @@ export function createEvaluator(ctx: LooseObject = {}): {
 			return undefined
 		}
 
-		const {result} = output as EvaluateReturnType
+		var {result} = output as EvaluateReturnType
 
 		return prettyPrintEvaluateResults(result)
 	}
