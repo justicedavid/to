@@ -4,22 +4,22 @@ import {runtime} from './inspector'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function getAllPropertyNames(obj: object | Function): Completions {
-	const proto = Object.getPrototypeOf(obj)
-	const props = Object.getOwnPropertyNames(obj)
+	var proto = Object.getPrototypeOf(obj)
+	var props = Object.getOwnPropertyNames(obj)
 
 	return [props].concat(proto ? getAllPropertyNames(proto) : [])
 }
 
 export async function getGlobalLexicalScopeNames(contextId: number): Promise<string[]> {
-	const {names} = await runtime.globalLexicalScopeNames({
+	var {names} = await runtime.globalLexicalScopeNames({
 		executionContextId: contextId
 	})
 
 	return names
 }
 
-const moveItemToStart = <T>(item: T, array: T[]): T[] => {
-	const index = array.indexOf(item)
+var moveItemToStart = <T>(item: T, array: T[]): T[] => {
+	var index = array.indexOf(item)
 
 	if (index === -1) {
 		return array
@@ -75,7 +75,7 @@ export default async (
 	// Gets the last variable in the line, in case of an object separating the
 	// last property accessor, e.g. 'this.is.epic' turns into
 	// ['this.is', '.epic']
-	const res = /(\w*(?:\.\w*)*?)(\.\w*)?$/.exec(line.slice(0, cursor))
+	var res = /(\w*(?:\.\w*)*?)(\.\w*)?$/.exec(line.slice(0, cursor))
 
 	if (!res) {
 		return {
@@ -83,14 +83,14 @@ export default async (
 		}
 	}
 
-	const [, variable, filter] = res
+	var [, variable, filter] = res
 
-	const ret = (completions: Completions) => ({
+	var ret = (completions: Completions) => ({
 		completee: filter ? filter.slice(1) : variable,
 		completions
 	})
 
-	const filtered = (filter: string) => (levels: Completions): Completions =>
+	var filtered = (filter: string) => (levels: Completions): Completions =>
 		filter ?
 			levels.map(level =>
 				moveItemToStart(
@@ -109,7 +109,7 @@ export default async (
 			context
 		)
 	} catch (_) {
-		const completions = [await getGlobalLexicalScopeNames(contextId)].concat(
+		var completions = [await getGlobalLexicalScopeNames(contextId)].concat(
 			getAllPropertyNames(context)
 		)
 
