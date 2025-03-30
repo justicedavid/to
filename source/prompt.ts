@@ -29,7 +29,7 @@ export interface KeypressDetails {
 }
 
 type Pair = [string, string]
-var pairs: Pair[] = [
+const pairs: Pair[] = [
 	['\'', '\''],
 	['"', '"'],
 	['`', '`'],
@@ -38,22 +38,22 @@ var pairs: Pair[] = [
 	['[', ']']
 ]
 
-var getPair = (ch: string): Pair | undefined => pairs.find(p => p[0] === ch)
-var hasXPair = (x: 0 | 1) => (ch: string) => pairs.map(p => p[x]).includes(ch)
-var hasPostPair = hasXPair(0)
-var hasPrePair = hasXPair(1)
+const getPair = (ch: string): Pair | undefined => pairs.find(p => p[0] === ch)
+const hasXPair = (x: 0 | 1) => (ch: string) => pairs.map(p => p[x]).includes(ch)
+const hasPostPair = hasXPair(0)
+const hasPrePair = hasXPair(1)
 
-var noop = <T>(x: T): T => x
+const noop = <T>(x: T): T => x
 
 export type CompletionFunction =
 	(line: string, cursor: number) => Promise<CompletionsMeta>
 
-var OPTIONS = {
+const OPTIONS = {
 	menuHeight: 5
 }
 
 /* eslint-disable @typescript-eslint/camelcase */
-var highlightSheet: emphasize.Sheet = {
+const highlightSheet: emphasize.Sheet = {
 	keyword: c.magenta,
 	built_in: c.cyan.italic,
 	literal: c.cyan,
@@ -75,24 +75,24 @@ export default function promptLine({
 	pureEvaluate: PureEvaluator
 }): Promise<PromptResult> {
 	return new Promise(resolve => {
-		var pre = c.bold.gray('> ')
+		const pre = c.bold.gray('> ')
 
-		var {stdin, stdout} = process
+		const {stdin, stdout} = process
 
 		if (!stdin.setRawMode) {
 			throw new Error('process.stdin.setRawMode does not exist')
 		}
 
-		var setRawMode = (b: boolean): void => stdin.setRawMode && stdin.setRawMode(b)
+		const setRawMode = (b: boolean): void => stdin.setRawMode && stdin.setRawMode(b)
 
 		setRawMode(true)
 		stdin.resume()
 
-		var readlineInputStream = new PassThrough()
+		const readlineInputStream = new PassThrough()
 
 		// This seems to have been pretty poorly typed...
 		type _ReadLineOptions = ReadLineOptions & {escapeCodeTimeout: number}
-		var rl = createReadLineInterface({
+		const rl = createReadLineInterface({
 			input: readlineInputStream,
 			terminal: true,
 			escapeCodeTimeout: 10
@@ -128,21 +128,21 @@ export default function promptLine({
 		}
 
 		function renderPrompt(): void {
-			var cols = stdout.columns || Infinity
-			var completion = scroller && menuItems.length > 0 ?
+			const cols = stdout.columns || Infinity
+			const completion = scroller && menuItems.length > 0 ?
 				menuItems[scroller.selected === -1 ? 0 : scroller.selected][0] :
 				''
 
-			var lineHighlightTime = time('lineHighlight')
-			var highlightedLine =
+			const lineHighlightTime = time('lineHighlight')
+			const highlightedLine =
 				emphasize.highlight('js', rl.line, highlightSheet).value
 			debug(lineHighlightTime())
 
-			var slice = (start: number, end?: number) =>
+			const slice = (start: number, end?: number) =>
 				sliceAnsi(highlightedLine, start, end)
 
-			var beforeCursor = (() => {
-				var sliced = slice(0, rl.cursor)
+			const beforeCursor = (() => {
+				const sliced = slice(0, rl.cursor)
 
 				if (menuItems.length === 0) {
 					return sliced
@@ -160,7 +160,7 @@ export default function promptLine({
 				return sliced
 			})()
 
-			var afterCursor = slice(rl.cursor)
+			const afterCursor = slice(rl.cursor)
 
 			debug(`rl.line = ${rl.line}`)
 			debug(`rl.cursor = ${rl.cursor}`)
@@ -168,7 +168,7 @@ export default function promptLine({
 			debug('beforeCursor = ' + beforeCursor)
 			debug('afterCursor = ' + afterCursor)
 
-			var out =
+			const out =
 				pre +
 				beforeCursor +
 				afterCursor +
@@ -177,13 +177,13 @@ export default function promptLine({
 			debug('out')
 			stdout.write(out)
 
-			var offset = rl.cursor + stripAnsi(pre).length
+			const offset = rl.cursor + stripAnsi(pre).length
 			cursorPosition = [
 				offset % cols,
 				Math.floor(offset / cols)
 			]
 
-			var rowsToGoUp = Math.floor((stripAnsi(out).length - 1) / cols)
+			const rowsToGoUp = Math.floor((stripAnsi(out).length - 1) / cols)
 
 			debug(`cursorMove(0, ${-rowsToGoUp})`)
 			stdout.write(ansiEscapes.cursorMove(0, -rowsToGoUp))
@@ -192,7 +192,7 @@ export default function promptLine({
 		}
 
 		function rerender(): void {
-			var rerenderTime = time('rerender')
+			const rerenderTime = time('rerender')
 
 			clearPrompt()
 			renderPrompt()
@@ -213,33 +213,33 @@ export default function promptLine({
 		}
 
 		function renderMenu(): void {
-			var menuTime = time('menu')
+			const menuTime = time('menu')
 
 			if (scroller === undefined) {
 				throw new Error('scroller was undefined while trying to render menu')
 			}
 
-			var cols = stdout.columns || Infinity
+			const cols = stdout.columns || Infinity
 
-			var menuPosition = completee !== undefined && scroller.selected !== -1 ?
+			const menuPosition = completee !== undefined && scroller.selected !== -1 ?
 				rl.cursor - menuItems[scroller.selected][0].length + completee.length :
 				rl.cursor
 
 			debug(`menuPosition: ${menuPosition}`)
 
-			var _offset = ((stripAnsi(pre).length + menuPosition) % cols) - 1
+			const _offset = ((stripAnsi(pre).length + menuPosition) % cols) - 1
 
-			var down = Math.floor(
+			const down = Math.floor(
 				(stripAnsi(rendered).length - 1) / cols
 			)
 
 			debug(`down: ${down}`)
 			stdout.write(ansiEscapes.cursorMove(0, down))
 
-			var columnSizes = getColumnSizes(menuItems)
+			const columnSizes = getColumnSizes(menuItems)
 			debug(`columnSizes: ${columnSizes}`)
 
-			var lines = menuItems.map(([name, kind]) =>
+			const lines = menuItems.map(([name, kind]) =>
 				' ' +
 				name.padEnd(columnSizes[0]) +
 				' ' +
@@ -248,35 +248,35 @@ export default function promptLine({
 			)
 
 			// + 1 because of the scrollbar
-			var maxRenderLength = Math.max(...lines.map(l => l.length)) + 1
+			const maxRenderLength = Math.max(...lines.map(l => l.length)) + 1
 
-			var scrollbar = scroll.generateScrollbar(scroller)
+			const scrollbar = scroll.generateScrollbar(scroller)
 			debug(`scrollbar ${JSON.stringify(scrollbar)}`)
 
-			var cap = cols - maxRenderLength
-			var offset = clamp(_offset, 0, cap)
+			const cap = cols - maxRenderLength
+			const offset = clamp(_offset, 0, cap)
 			debug(`offset: ${offset}`)
 
 			debug(`menuSelectedIndex: ${scroller.selected}`)
 
 			for (let i = scroller.start; i <= scroller.end; i++) {
-				var line = lines[i]
+				const line = lines[i]
 
-				var selected = i === scroller.selected
+				const selected = i === scroller.selected
 
-				var lineStyleFn =
+				const lineStyleFn =
 					selected ?
 						c.bgBlackBright :
 						noop
 
-				var renderedRowNumber = i - scroller.start
+				const renderedRowNumber = i - scroller.start
 				debug(`renderedRowNumber ${renderedRowNumber}`)
-				var showScrollbarChar =
+				const showScrollbarChar =
 					scrollbar.offset <= renderedRowNumber &&
 					renderedRowNumber < (scrollbar.offset + scrollbar.size) &&
 					scrollbar.size !== menuItems.length
 
-				var scrollCharFn = showScrollbarChar ?
+				const scrollCharFn = showScrollbarChar ?
 					c.bgBlackBright :
 					noop
 
@@ -302,9 +302,9 @@ export default function promptLine({
 			key: string | undefined,
 			details: KeypressDetails
 		): Promise<void> {
-			var keyTime = time('key')
+			const keyTime = time('key')
 
-			var {shift, ctrl, name, sequence} = details
+			const {shift, ctrl, name, sequence} = details
 
 			if (key) {
 				debug('key ' + Buffer.from(key).toString('hex'))
@@ -314,7 +314,7 @@ export default function promptLine({
 			debug('details ' + JSON.stringify(details))
 
 			// Character in the position x, where x is the offset from cursor
-			var relativeCharacter = (offset: number): string | undefined =>
+			const relativeCharacter = (offset: number): string | undefined =>
 				rl.line[rl.cursor + offset]
 
 			if (scroller === undefined && name === 'tab' && menuItems.length > 0) {
@@ -323,13 +323,13 @@ export default function promptLine({
 
 			if (name === 'tab') {
 				if (scroller) {
-					var _completee = completee || ''
+					const _completee = completee || ''
 
-					var previousSelectedItem = scroller.selected === -1 ?
+					const previousSelectedItem = scroller.selected === -1 ?
 						'' :
 						menuItems[scroller.selected][0]
 
-					var charAmountToDelete = scroller.selected === -1 ?
+					const charAmountToDelete = scroller.selected === -1 ?
 						0 :
 						previousSelectedItem.length - _completee.length
 
@@ -341,7 +341,7 @@ export default function promptLine({
 						scroller = scroll.nextItem(scroller)
 					}
 
-					var selectedItem = scroller.selected === -1 ?
+					const selectedItem = scroller.selected === -1 ?
 						'' :
 						menuItems[scroller.selected][0]
 
@@ -392,7 +392,7 @@ export default function promptLine({
 			} else if (hasPostPair(sequence)) {
 				// Append a matching pair character, place cursor inside
 				// input `(`: `|` -> `(|)`
-				var pair = getPair(sequence)
+				const pair = getPair(sequence)
 				if (pair === undefined) {
 					throw new Error(`No pair for ${name}`)
 				}
@@ -400,13 +400,13 @@ export default function promptLine({
 				rl.write(pair[0] + pair[1])
 				rl.write('', {name: 'left'})
 			} else if (name === 'backspace') {
-				var characterToDelete = relativeCharacter(-1)
-				var nextCharacter = relativeCharacter(0)
+				const characterToDelete = relativeCharacter(-1)
+				const nextCharacter = relativeCharacter(0)
 
 				// Delete a matching pair character if exists
 				// input `<backspace>`: `(|)` -> `|`
 				if (characterToDelete !== undefined && hasPostPair(characterToDelete)) {
-					var pair = getPair(characterToDelete)
+					const pair = getPair(characterToDelete)
 					if (pair && pair[1] === nextCharacter) {
 						// Matching pair, delete one character after cursor
 						rl.write('', {name: 'delete'})
@@ -423,8 +423,8 @@ export default function promptLine({
 				scroller = undefined
 				menuItems = []
 			} else if (name !== 'tab' || scroller === undefined) {
-				var completionsTime = time('completions')
-				var result = await complete(rl.line, rl.cursor)
+				const completionsTime = time('completions')
+				const result = await complete(rl.line, rl.cursor)
 				debug(completionsTime())
 
 				completee = result.completee
@@ -445,7 +445,7 @@ export default function promptLine({
 			debug(`scroller = ${JSON.stringify(scroller)}`)
 
 			if (rl.line.length > 0) {
-				var eagerEvalTime = time('eagerEval')
+				const eagerEvalTime = time('eagerEval')
 				eager = await pureEvaluate(rl.line)
 				debug(eagerEvalTime())
 			} else {
