@@ -9,7 +9,7 @@ import {
 } from '../source/util'
 
 test('getColumnSizes', t => {
-	const cases: Array<[string[][], number[]]> = [
+	let cases: Array<[string[][], number[]]> = [
 		[[], []],
 		[[['1'], ['3']], [1]],
 		[[['one', 'two'], ['three', 'a'], ['b', 'cd']], [5, 3]],
@@ -22,9 +22,9 @@ test('getColumnSizes', t => {
 })
 
 test('returnError', t => {
-	const e = new Error()
+	let e = new Error()
 
-	const throwy = (will: boolean): number => {
+	let throwy = (will: boolean): number => {
 		if (will) {
 			throw e
 		}
@@ -37,7 +37,7 @@ test('returnError', t => {
 })
 
 test('addBuiltinsToObject', t => {
-	const o: LooseObject = {}
+	let o: LooseObject = {}
 
 	addBuiltinsToObject(o)
 
