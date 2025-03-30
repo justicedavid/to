@@ -6,7 +6,7 @@ interface ContextResult<T> {
 	context: T
 }
 
-const session = new Session()
+var session = new Session()
 
 try {
 	session.connect()
@@ -16,7 +16,7 @@ try {
 	}
 }
 
-const createProxy = (domain: string): any => new Proxy({} as any, {
+var createProxy = (domain: string): any => new Proxy({} as any, {
 	get(_, property) {
 		return (args?: object) => {
 			if (typeof property !== 'string') {
@@ -37,7 +37,7 @@ const createProxy = (domain: string): any => new Proxy({} as any, {
 })
 
 export function createContext<T extends {}>(base: T): ContextResult<T> {
-	const contextIdPromise: Promise<number> = new Promise(resolve => {
+	var contextIdPromise: Promise<number> = new Promise(resolve => {
 		// About `Runtime.enable`:
 		// https://chromedevtools.github.io/devtools-protocol/v8/Runtime#method-enable
 
@@ -60,5 +60,5 @@ export function createContext<T extends {}>(base: T): ContextResult<T> {
 	}
 }
 
-export const runtime = createProxy('Runtime')
+export var runtime = createProxy('Runtime')
 export interface EvaluateReturnType extends Runtime.EvaluateReturnType {}
